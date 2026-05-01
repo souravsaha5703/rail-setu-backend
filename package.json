@@ -1,0 +1,22 @@
+{
+  "name": "rail-setu-server",
+  "version": "1.0.0",
+  "description": "Backend server of rail setu project",
+  "license": "ISC",
+  "author": "Sourav Saha",
+  "type": "module",
+  "main": "app.ts",
+  "scripts": {
+    "test": "npm run server",
+    "dev": "nodemon app.js"
+  },
+  "dependencies": {
+    "compression": "^1.8.1",
+    "cors": "^2.8.6",
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1",
+    "helmet": "^8.1.0",
+    "mongodb": "^7.2.0",
+    "mongoose": "^9.6.1"
+  }
+}
