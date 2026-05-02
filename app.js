@@ -23,9 +23,9 @@ app.use(cors({
     exposedHeaders: ['X-Data-Version']
 }));
 app.use(express.json());
-app.use('/api/health',router);
+app.use('/api/health', router);
 app.use('/api/stations', stationsRouter);
-app.use('/api/trains',trainsRouter);
+app.use('/api/trains', trainsRouter);
 
 app.use((err, req, res, next) => {
     console.error(err.stack);
