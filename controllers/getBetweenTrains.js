@@ -1,3 +1,5 @@
+import { trainCache } from "../config/cache.js";
+
 export const getBetweenTrains = async (req, res) => {
     const { source, destination, date } = req.query;
     const url = `https://irctc-api2.p.rapidapi.com/trainAvailability?source=${source}&destination=${destination}&date=${date}`;
@@ -25,14 +27,18 @@ export const getBetweenTrains = async (req, res) => {
             });
         }
 
-        res.status(200).json({
+        const trainNumbers = result.data.map(train => Number(train.trainNumber))
+        const cacheKey = `${source}-${destination}`;
+        trainCache.set(cacheKey, trainNumbers);
+
+        return res.status(200).json({
             status: 200,
             response: result,
             message: "Available Train Fetched"
         });
     } catch (error) {
         console.error("External api error ", error);
-        res.status(500).json({
+        return res.status(500).json({
             status: 500,
             message: "Internal Server Error"
         });
