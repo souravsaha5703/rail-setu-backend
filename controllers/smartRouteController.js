@@ -1,5 +1,6 @@
 import { trainCache } from "../config/cache.js";
 import { seedSchedulesForSmartRoute } from "../services/seedSchedulesForSmartRoute.js";
+import { findLeg1, findLeg2 } from "../services/findLegRoutes.js";
 
 export const smartRouteController = async (req, res) => {
     const { sourceCode, destCode, date } = req.query;
@@ -14,7 +15,10 @@ export const smartRouteController = async (req, res) => {
         });
     }
 
-    const allSchedule = await seedSchedulesForSmartRoute(trainNumbers, date);
+    await seedSchedulesForSmartRoute(trainNumbers, date);
 
-    return res.json({ success: true, message: "Schedules ready", data: allSchedule });
+    const leg1Route = await findLeg1(sourceCode);
+    const leg2Route = await findLeg2(destCode);
+
+    return res.json({ success: true, message: "Schedules ready", data: {leg1Route,leg2Route} });
 }

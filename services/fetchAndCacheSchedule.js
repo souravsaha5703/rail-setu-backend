@@ -38,15 +38,15 @@ export const fetchAndCacheSchedule = async (trainNumber, date) => {
     const newSchedule = await TrainRoute.findOneAndUpdate(
         { "train.number": trainNoInSTR },
         {
-            $set: {
-                route: result.data.route
-            },
             $setOnInsert: {
-                "train.number": result.data.train.number,
-                "train.name": result.data.train.name,
-                "train.type": result.data.train.type,
-                "train.sourceStationCode": result.data.train.sourceStationCode,
-                "train.destinationStationCode": result.data.train.destinationStationCode
+                train: {
+                    number: result.data.train.number,
+                    name: result.data.train.name,
+                    type: result.data.train.type,
+                    sourceStationCode: result.data.train.sourceStationCode,
+                    destinationStationCode: result.data.train.destinationStationCode
+                },
+                route: result.data.route
             }
         },
         {
