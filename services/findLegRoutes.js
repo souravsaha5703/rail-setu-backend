@@ -19,7 +19,10 @@ export const findLeg1 = async (source) => {
                     .slice(sourceIndex)
                     .map(s => ({
                         code: s.stationCode,
-                        name: s.stationName
+                        name: s.stationName,
+                        arrivalMinutes: s.arrivalMinutes,
+                        departureMinutes: s.departureMinutes,
+                        day: s.day
                     }))
             };
         })
@@ -47,7 +50,10 @@ export const findLeg2 = async (destination) => {
                     .slice(0, destIndex + 1)
                     .map(s => ({
                         code: s.stationCode,
-                        name: s.stationName
+                        name: s.stationName,
+                        arrivalMinutes: s.arrivalMinutes,
+                        departureMinutes: s.departureMinutes,
+                        day: s.day
                     }))
             };
         })
