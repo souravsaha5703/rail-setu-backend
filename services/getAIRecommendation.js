@@ -7,7 +7,7 @@ export const getAIRecommendedJunctions = async (source, destination, leg1Route, 
     const prompt = `
         You are the routing engine for "RailSetu". 
         A user wants to travel from ${source} to ${destination}, but direct trains are unavailable or in waitlist or have RAC.
-        Your task is to find the top 3 BEST junction stations to break this journey into two legs.
+        Your task is to find the top 2 BEST junction stations to break this journey into two legs.
 
         INPUT DATA:
         - Source: ${source}

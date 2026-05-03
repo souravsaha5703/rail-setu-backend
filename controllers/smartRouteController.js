@@ -2,6 +2,7 @@ import { trainCache } from "../config/cache.js";
 import { seedSchedulesForSmartRoute } from "../services/seedSchedulesForSmartRoute.js";
 import { findLeg1, findLeg2 } from "../services/findLegRoutes.js";
 import { getAIRecommendedJunctions } from "../services/getAIRecommendation.js";
+import { getSmartRouteAvailability } from "../services/getSmartRouteAvailability.js";
 
 export const smartRouteController = async (req, res) => {
     const { sourceCode, destCode, date } = req.query;
@@ -24,7 +25,9 @@ export const smartRouteController = async (req, res) => {
 
         const aiResult = await getAIRecommendedJunctions(sourceCode, destCode, leg1Route, leg2Route);
 
-        return res.json({ success: true, message: "Ai Recommendation Done", data: aiResult });
+        const availabilityResults = await getSmartRouteAvailability(aiResult.junctions, date);
+
+        return res.json({ success: true, message: "Ai Recommendation Done", data: availabilityResults });
     } catch (error) {
         res.status(500).json({ success: false, message: error.message });
     }
