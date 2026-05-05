@@ -18,7 +18,7 @@ export const smartRouteController = async (req, res) => {
             });
         }
 
-        await seedSchedulesForSmartRoute(trainNumbers, date);
+        const result = await seedSchedulesForSmartRoute(trainNumbers, date);
 
         const leg1Route = await findLeg1(sourceCode);
         const leg2Route = await findLeg2(destCode);
@@ -28,6 +28,8 @@ export const smartRouteController = async (req, res) => {
         const availabilityResults = await getSmartRouteAvailability(aiResult.junctions, date);
 
         return res.json({ success: true, message: "Ai Recommendation Done", data: availabilityResults });
+
+        // return res.json({success:false,data:result})
     } catch (error) {
         res.status(500).json({ success: false, message: error.message });
     }
