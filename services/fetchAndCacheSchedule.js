@@ -1,4 +1,4 @@
-import TrainRoute from "../models/TrainRoute.js";
+import TrainRoute from "../models/trainRoute.js";
 import { convertDateFormat } from "../utils/dateConverter.js";
 
 export const fetchAndCacheSchedule = async (trainNumber, date) => {
