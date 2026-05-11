@@ -7,30 +7,44 @@ import { getSmartRouteAvailability } from "../services/getSmartRouteAvailability
 export const smartRouteController = async (req, res) => {
     const { sourceCode, destCode, date } = req.query;
 
+    res.setHeader('Content-Type', 'text/event-stream');
+    res.setHeader('Cache-Control', 'no-cache');
+    res.setHeader('Connection', 'keep-alive');
+
+    const sendUpdate = (message, data = null) => {
+        res.write(`data: ${JSON.stringify({ message, data })}\n\n`);
+    };
+
     try {
+        sendUpdate("Fething Train Schedules...");
         const cacheKey = `${sourceCode}-${destCode}`;
         const trainNumbers = trainCache.get(cacheKey);
 
         if (!trainNumbers) {
-            return res.status(400).json({
-                success: false,
-                message: "Session expired. Please search again",
-            });
+            res.write(`data: ${JSON.stringify({ error: "Session expired. Please search again." })}\n\n`);
+            return res.end();
         }
 
-        const result = await seedSchedulesForSmartRoute(trainNumbers, date);
+        await seedSchedulesForSmartRoute(trainNumbers, date);
 
+        sendUpdate("Analysing Routes...");
         const leg1Route = await findLeg1(sourceCode);
         const leg2Route = await findLeg2(destCode);
 
+        sendUpdate("AI is finding best junctions...");
         const aiResult = await getAIRecommendedJunctions(sourceCode, destCode, leg1Route, leg2Route);
 
+        sendUpdate("Checking seat availability...");
         const availabilityResults = await getSmartRouteAvailability(aiResult.junctions, date);
 
-        return res.json({ success: true, message: "Ai Recommendation Done", data: availabilityResults });
+        sendUpdate("Done!", availabilityResults);
+        res.end();
+        // return res.json({ success: true, message: "Ai Recommendation Done", data: availabilityResults });
 
         // return res.json({success:false,data:result})
     } catch (error) {
-        res.status(500).json({ success: false, message: error.message });
+        // res.status(500).json({ success: false, message: error.message });
+        res.write(`data: ${JSON.stringify({ error: error.message })}\n\n`);
+        res.end();
     }
 }
